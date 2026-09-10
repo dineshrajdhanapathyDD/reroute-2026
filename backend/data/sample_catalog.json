@@ -1,0 +1,50 @@
+{
+  "_comment": "Sample re:Invent catalog export. Replace with your real export. Field names are matched flexibly (see catalog_provider.FIELD_ALIASES). Only title + start are strictly required per row.",
+  "sessions": [
+    {
+      "code": "AIM301",
+      "title": "Building production-ready AI agents on AWS",
+      "track": "AI/ML",
+      "sessionType": "Breakout",
+      "venue": "Venetian",
+      "room": "Level 3, Lido 3001",
+      "level": "300 - Advanced",
+      "startTime": "2026-12-01T09:00:00",
+      "endTime": "2026-12-01T10:00:00",
+      "abstract": "Design, deploy, and operate agentic applications with Amazon Bedrock AgentCore."
+    },
+    {
+      "code": "AIM401",
+      "title": "Amazon Bedrock: orchestrating multi-agent systems",
+      "track": "AI/ML",
+      "sessionType": "Breakout",
+      "venue": "Caesars Forum",
+      "room": "Forum 120",
+      "level": "400 - Expert",
+      "startTime": "2026-12-01T10:30:00",
+      "endTime": "2026-12-01T11:30:00"
+    },
+    {
+      "code": "AIM205",
+      "title": "Generative AI hands-on: build an agent workflow",
+      "track": "AI/ML",
+      "sessionType": "Workshop",
+      "venue": "MGM Grand",
+      "room": "Premier 314",
+      "level": "200 - Intermediate",
+      "startTime": "2026-12-01T13:00:00",
+      "endTime": "2026-12-01T15:00:00"
+    },
+    {
+      "code": "SEC302",
+      "title": "Securing generative AI applications",
+      "track": "Security",
+      "sessionType": "Breakout",
+      "venue": "Wynn",
+      "room": "Latour 5",
+      "level": "300 - Advanced",
+      "startTime": "2026-12-02T13:30:00",
+      "endTime": "2026-12-02T14:30:00"
+    }
+  ]
+}

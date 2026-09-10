@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-void: #080B10;
+  --color-hull: #0D121A;
+  --color-surface: #121826;
+  --color-surface-raised: #171F30;
+  --color-surface-hover: #1C2538;
+  --color-line: #232C40;
+  --color-line-soft: #1A2233;
+
+  --color-text-primary: #EEF1F6;
+  --color-text-secondary: #A9B2C3;
+  --color-text-muted: #6B7488;
+
+  --color-signal-100: #FFE3CC;
+  --color-signal-400: #FF9142;
+  --color-signal-500: #FF7A1A;
+  --color-signal-600: #E8630A;
+  --color-signal-700: #C24E04;
+
+  --color-go: #33D690;
+  --color-go-soft: #0F2A21;
+  --color-caution: #F5B94D;
+  --color-caution-soft: #2E230F;
+  --color-critical: #FF6259;
+  --color-critical-soft: #301415;
+  --color-beacon: #4FA8FF;
+  --color-beacon-soft: #0F2137;
+
+  --font-display: 'Sora', 'IBM Plex Sans', sans-serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  --radius-card: 14px;
+  --radius-control: 9px;
+}
+
+html, body, #root { height: 100%; }
+
+body {
+  background: var(--color-void);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(1200px 600px at 12% -10%, rgba(255,122,26,0.07), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, rgba(79,168,255,0.06), transparent 55%);
+  background-attachment: fixed;
+}
+
+* { border-color: var(--color-line); }
+::selection { background: rgba(255,122,26,0.30); }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-line); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-surface-hover); }
+
+.font-display { font-family: var(--font-display); }
+.font-mono { font-family: var(--font-mono); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-signal-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@keyframes route-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+.animate-route-pulse { animation: route-pulse 2s ease-in-out infinite; }
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-rise-in { animation: rise-in 0.4s ease-out both; }

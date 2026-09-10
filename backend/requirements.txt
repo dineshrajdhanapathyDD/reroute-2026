@@ -1,0 +1,21 @@
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+# Real LLM-driven Strands orchestration (Amazon Nova on Bedrock).
+# NOTE: for Lambda, build with `sam build --use-container` (Docker) so Linux
+# wheels are produced — a local Windows build pulls in pywin32 (via watchdog)
+# which is not Lambda-compatible.
+strands-agents>=0.1.9
+# Optional: Amazon Polly text-to-speech + Amazon Bedrock (embeddings/model).
+# Without it, the app uses browser TTS and local embeddings. boto3 also enables
+# Bedrock model calls.
+# boto3>=1.34
+# Optional: the reinvent-2026 MCP server (exposes catalog tools to MCP clients).
+# mcp>=1.2
+# Optional: browser scraping for the login-gated catalog (scrape_catalog modes
+# public/auth). Run `playwright install chromium` after installing.
+# playwright>=1.40
+# AWS Lambda adapter (serverless deploy behind API Gateway).
+mangum==0.19.0
+pytest==8.3.4
+httpx==0.28.1

@@ -1,0 +1,129 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Re:Route AI — serverless backend. Deploys the FastAPI app as an AWS Lambda
+  function behind an API Gateway HTTP API, with an execution role scoped to
+  Amazon models only: Bedrock Nova (agent) + Titan Text Embeddings, and Amazon
+  Polly. Simplest execution path for the hackathon.
+
+# Build with AWS SAM (recommended):
+#   sam build && sam deploy --guided
+# The CodeUri points at backend/ so SAM installs requirements.txt for you.
+
+Globals:
+  Function:
+    Timeout: 120
+    MemorySize: 2048
+    Runtime: python3.13
+
+Parameters:
+  BedrockModel:
+    Type: String
+    Default: nova-pro
+    AllowedValues: [nova-premier, nova-pro, nova-lite, nova-micro]
+    Description: Amazon Nova model the agent uses (Amazon models only).
+  UseBedrockModel:
+    Type: String
+    Default: "0"
+    AllowedValues: ["0", "1"]
+    Description: >
+      Enable the real Bedrock Nova agent (1) or the fast deterministic pipeline
+      (0). The Nova tool-loop can exceed the API Gateway 30s limit, so 0 is the
+      default for the synchronous HTTP API; the same Nova tools are used either way.
+  UseBedrockEmbeddings:
+    Type: String
+    Default: "0"
+    AllowedValues: ["0", "1"]
+    Description: >
+      Use Amazon Titan Text Embeddings (1) or the fast local embedder (0).
+      Titan re-embeds the catalog per request and can exceed 30s on Lambda, so 0
+      is the default for the synchronous API.
+  UsePolly:
+    Type: String
+    Default: "1"
+    AllowedValues: ["0", "1"]
+    Description: Use Amazon Polly for text-to-speech.
+
+Resources:
+  RerouteApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins: ["*"]
+        AllowMethods: ["*"]
+        AllowHeaders: ["*"]
+
+  RerouteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${AWS::StackName}-api"
+      CodeUri: ../backend/
+      Handler: app.lambda_handler.handler
+      Description: Re:Route AI FastAPI backend on Lambda (Amazon Nova models).
+      # Direct Function URL — no API Gateway 30s cap, so the Nova agent loop can
+      # finish. CORS open for the frontend.
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins: ["*"]
+          AllowMethods: ["*"]
+          AllowHeaders: ["*"]
+      Environment:
+        Variables:
+          # AWS_REGION is set automatically by the Lambda runtime; our code reads it.
+          REROUTE_MODEL: !Ref BedrockModel
+          REROUTE_USE_STRANDS_MODEL: !Ref UseBedrockModel
+          REROUTE_USE_BEDROCK_EMBEDDINGS: !Ref UseBedrockEmbeddings
+          REROUTE_USE_POLLY: !Ref UsePolly
+          # MCP is a subprocess-based server; not used inside Lambda. The bundled
+          # catalog (backend/data/reinvent2026_sessions.json) is packaged and used.
+      Policies:
+        - Statement:
+            - Sid: BedrockAmazonModels
+              Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+                - bedrock:InvokeModelWithResponseStream
+              Resource:
+                - !Sub "arn:aws:bedrock:*::foundation-model/amazon.nova-*"
+                - !Sub "arn:aws:bedrock:*:${AWS::AccountId}:inference-profile/us.amazon.nova-*"
+                - !Sub "arn:aws:bedrock:*::foundation-model/amazon.titan-embed-text-*"
+            - Sid: BedrockDiscovery
+              Effect: Allow
+              Action:
+                - bedrock:GetInferenceProfile
+                - bedrock:ListInferenceProfiles
+                - bedrock:ListFoundationModels
+              Resource: "*"
+            - Sid: PollyTts
+              Effect: Allow
+              Action:
+                - polly:SynthesizeSpeech
+                - polly:DescribeVoices
+              Resource: "*"
+      Events:
+        Root:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RerouteApi
+            Path: /
+            Method: ANY
+        Proxy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RerouteApi
+            Path: /{proxy+}
+            Method: ANY
+
+Outputs:
+  FunctionUrl:
+    Description: Direct Lambda Function URL (no 30s cap) — use this for the frontend.
+    Value: !GetAtt RerouteFunctionUrl.FunctionUrl
+  ApiUrl:
+    Description: API Gateway base URL (30s cap; fine for fast endpoints).
+    Value: !Sub "https://${RerouteApi}.execute-api.${AWS::Region}.amazonaws.com"
+  HealthUrl:
+    Description: Health check.
+    Value: !Sub "https://${RerouteApi}.execute-api.${AWS::Region}.amazonaws.com/api/health"
+  FunctionName:
+    Value: !Ref RerouteFunction

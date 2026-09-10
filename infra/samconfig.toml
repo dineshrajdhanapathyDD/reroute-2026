@@ -1,0 +1,13 @@
+version = 0.1
+
+[default.deploy.parameters]
+stack_name = "reroute-ai"
+resolve_s3 = true
+s3_prefix = "reroute-ai"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = false
+parameter_overrides = "BedrockModel=nova-pro UseBedrockModel=0 UseBedrockEmbeddings=0 UsePolly=1"
+
+[default.build.parameters]
+template = "reroute-lambda.yaml"

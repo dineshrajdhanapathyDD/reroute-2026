@@ -1,0 +1,129 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Re:Route AI — AWS integration IAM (Amazon models only). Provisions a
+  least-privilege managed policy for Amazon Bedrock (InvokeModel: Nova + Titan
+  embeddings) and Amazon Polly (SynthesizeSpeech), attached to an application
+  role (for EC2/ECS/Lambda) and, optionally, to an IAM user with access keys for
+  local development.
+
+# ---------------------------------------------------------------------------
+Parameters:
+  CreateDevUser:
+    Type: String
+    AllowedValues: ["true", "false"]
+    Default: "false"
+    Description: >
+      Create an IAM user + access key for LOCAL development. Convenient but less
+      secure than a role — prefer roles in production. Access keys are returned
+      as stack outputs (visible to anyone who can read the stack).
+
+  AppTrustService:
+    Type: String
+    AllowedValues:
+      - ec2.amazonaws.com
+      - ecs-tasks.amazonaws.com
+      - lambda.amazonaws.com
+    Default: ecs-tasks.amazonaws.com
+    Description: Which AWS service is allowed to assume the application role.
+
+# ---------------------------------------------------------------------------
+Conditions:
+  MakeDevUser: !Equals [!Ref CreateDevUser, "true"]
+
+# ---------------------------------------------------------------------------
+Resources:
+  # Least-privilege policy: exactly the actions Re:Route AI calls.
+  RerouteAwsPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: !Sub "${AWS::StackName}-reroute-ai"
+      Description: Bedrock InvokeModel (Nova/Claude/Titan) + Polly SynthesizeSpeech for Re:Route AI.
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          # --- Amazon Bedrock: Amazon models only (Nova agent + Titan embeddings) ---
+          - Sid: BedrockInvokeModels
+            Effect: Allow
+            Action:
+              - bedrock:InvokeModel
+              - bedrock:InvokeModelWithResponseStream
+            Resource:
+              # Amazon Nova (foundation + cross-region inference profiles)
+              - !Sub "arn:aws:bedrock:*::foundation-model/amazon.nova-*"
+              - !Sub "arn:aws:bedrock:*:${AWS::AccountId}:inference-profile/us.amazon.nova-*"
+              # Amazon Titan Text Embeddings
+              - !Sub "arn:aws:bedrock:*::foundation-model/amazon.titan-embed-text-*"
+          # Needed so the SDK can resolve cross-region inference profiles.
+          - Sid: BedrockDiscovery
+            Effect: Allow
+            Action:
+              - bedrock:GetInferenceProfile
+              - bedrock:ListInferenceProfiles
+              - bedrock:ListFoundationModels
+            Resource: "*"
+          # --- Amazon Polly: text-to-speech ---
+          - Sid: PollySynthesize
+            Effect: Allow
+            Action:
+              - polly:SynthesizeSpeech
+              - polly:DescribeVoices
+            Resource: "*"
+
+  # Application role (attach to ECS task / EC2 instance / Lambda).
+  RerouteAppRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${AWS::StackName}-app-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: !Ref AppTrustService
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Ref RerouteAwsPolicy
+      Description: Role assumed by the Re:Route AI backend to call Bedrock + Polly.
+
+  # Optional IAM user for local dev (guarded by CreateDevUser).
+  RerouteDevUser:
+    Type: AWS::IAM::User
+    Condition: MakeDevUser
+    Properties:
+      UserName: !Sub "${AWS::StackName}-dev"
+      ManagedPolicyArns:
+        - !Ref RerouteAwsPolicy
+
+  RerouteDevAccessKey:
+    Type: AWS::IAM::AccessKey
+    Condition: MakeDevUser
+    Properties:
+      UserName: !Ref RerouteDevUser
+
+# ---------------------------------------------------------------------------
+Outputs:
+  PolicyArn:
+    Description: The managed policy ARN.
+    Value: !Ref RerouteAwsPolicy
+
+  AppRoleArn:
+    Description: ARN of the application role (attach to your ECS task / EC2 / Lambda).
+    Value: !GetAtt RerouteAppRole.Arn
+
+  DevAccessKeyId:
+    Condition: MakeDevUser
+    Description: Access key id for local dev (set as AWS_ACCESS_KEY_ID).
+    Value: !Ref RerouteDevAccessKey
+
+  DevSecretAccessKey:
+    Condition: MakeDevUser
+    Description: >
+      Secret access key for local dev (set as AWS_SECRET_ACCESS_KEY). Treat as a
+      secret; rotate/delete when done. Retrieve once, do not commit.
+    Value: !GetAtt RerouteDevAccessKey.SecretAccessKey
+
+  EnableEnvVars:
+    Description: Backend env vars to turn on the real AWS services.
+    Value: >-
+      REROUTE_USE_STRANDS_MODEL=1 REROUTE_MODEL=nova-pro
+      REROUTE_USE_BEDROCK_EMBEDDINGS=1 REROUTE_USE_POLLY=1

@@ -1,0 +1,198 @@
+{
+  "_comment": "Past re:Invent experience & preparation tips for the RAG advice engine. Add/edit freely: each tip needs 'text'; 'tags' and 'source' are optional. The agent retrieves the most relevant tips for a user's mission and cites the source. Replace the seed tips below with your own data.",
+  "tips": [
+    {
+      "id": "t-shoes",
+      "text": "Wear broken-in, comfortable walking shoes. re:Invent spans the whole Strip and you can easily walk 8-12 km per day between venues. Sore feet by Wednesday is the most common regret.",
+      "tags": ["walking", "health", "logistics"],
+      "source": "Attendee retrospective 2024"
+    },
+    {
+      "id": "t-shuttle",
+      "text": "Use the complimentary campus shuttles for venue-to-venue hops that aren't walkable (e.g. MGM Grand to Venetian). Budget 25-30 minutes end-to-end including waiting and boarding, not just ride time.",
+      "tags": ["travel", "shuttle", "logistics"],
+      "source": "Attendee retrospective 2024"
+    },
+    {
+      "id": "t-reserve",
+      "text": "Reserve workshops, chalk talks, and builders' sessions the moment reservations open. Hands-on formats have small capacity and fill within hours. Have a backup for each must-attend.",
+      "tags": ["sessions", "reservations", "workshops"],
+      "source": "Attendee retrospective 2023"
+    },
+    {
+      "id": "t-repeats",
+      "text": "Popular breakouts are often repeated across days. If a session is full, check for a repeat before giving up your slot for something less relevant.",
+      "tags": ["sessions", "reroute", "recovery"],
+      "source": "Attendee retrospective 2023"
+    },
+    {
+      "id": "t-handson",
+      "text": "Balance lecture-style breakouts with hands-on workshops. Attendees who did only breakouts said they retained less; one or two builders' sessions per day cements the learning.",
+      "tags": ["learning", "balance", "workshops"],
+      "source": "Learning retrospective"
+    },
+    {
+      "id": "t-keynote",
+      "text": "Watch the Monday Night Live and Tuesday CEO keynote for launch announcements, then pivot your week: new services often get same-week deep-dive sessions and Expo demos.",
+      "tags": ["keynote", "announcements", "planning"],
+      "source": "Attendee retrospective 2024"
+    },
+    {
+      "id": "t-expo",
+      "text": "Block Expo time deliberately. The AWS Village and partner zones are where you get 1:1 expert time on your exact problem. 30-minute expert conversations beat a generic breakout for niche questions.",
+      "tags": ["expo", "networking", "experts"],
+      "source": "Attendee retrospective 2024"
+    },
+    {
+      "id": "t-hydrate",
+      "text": "Las Vegas is dry desert air. Carry a water bottle and refill often; dehydration plus long days causes the mid-week energy crash. Eat a real breakfast before 9 AM sessions.",
+      "tags": ["health", "energy", "logistics"],
+      "source": "Attendee retrospective 2023"
+    },
+    {
+      "id": "t-capacity",
+      "text": "Don't over-schedule. Three to four technical sessions plus one workshop per day is sustainable; five-plus back-to-back across far venues leads to burnout and skipped sessions. Protect breaks.",
+      "tags": ["capacity", "planning", "burnout"],
+      "source": "Learning retrospective"
+    },
+    {
+      "id": "t-security-thu",
+      "text": "If security is your focus, plan Thursday around the Security Focus concentration at Wynn (300-500 level, many interactive). It's the highest-density security day of the week.",
+      "tags": ["security", "thursday", "planning"],
+      "source": "Attendee retrospective 2024"
+    },
+    {
+      "id": "t-connectivity",
+      "text": "Get an eSIM or confirm roaming before you land. Venue Wi-Fi is crowded; you'll want reliable data for the mobile app, maps, and session reservations on the move.",
+      "tags": ["connectivity", "travel", "prep"],
+      "source": "Travel retrospective"
+    },
+    {
+      "id": "t-arrive-early",
+      "text": "Arrive at least the day before (Sunday) for badge pickup and to beat jet lag, especially on long-haul flights from Asia/Europe. Arriving the morning of Day 1 risks missing early sessions.",
+      "tags": ["travel", "arrival", "jetlag"],
+      "source": "Travel retrospective"
+    },
+    {
+      "id": "t-notes",
+      "text": "Take structured notes per session (key takeaway, action item, resource link). By Friday the days blur together; notes turn the week into things you actually apply back at work.",
+      "tags": ["notes", "learning", "followup"],
+      "source": "Learning retrospective"
+    },
+    {
+      "id": "t-buffer",
+      "text": "Leave a 15-minute buffer between sessions at different venues. Rooms empty slowly, hallways are packed, and the next room may be a floor or a building away.",
+      "tags": ["buffer", "travel", "planning"],
+      "source": "Attendee retrospective 2023"
+    },
+
+    {
+      "id": "t-plan-abc",
+      "text": "Build three schedules: Plan A (your ideal sessions), Plan B (backups if A fills or is cancelled), and Plan C (a fallback if the day goes sideways). Reserved sessions fill fast, so always have alternatives ready.",
+      "tags": ["planning", "backup", "reservations", "reroute"],
+      "source": "Reddit r/aws attendee tips"
+    },
+    {
+      "id": "t-travel-40min",
+      "text": "Whatever the map says, budget no less than 40 minutes to travel between venues. Vegas traffic and the sheer size of the Strip make even 'close' hops slow. Plan around it.",
+      "tags": ["travel", "shuttle", "logistics", "time"],
+      "source": "Reddit r/aws attendee tips"
+    },
+    {
+      "id": "t-stay-one-venue",
+      "text": "Where possible, stay in one venue for the day. Moving back and forth across the Strip eats hours. If your must-see session is at MGM Grand (far south), plan to stay south the whole day.",
+      "tags": ["travel", "planning", "venues"],
+      "source": "jimmydqv.com — How to re:Invent (paraphrased)"
+    },
+    {
+      "id": "t-prefer-labs",
+      "text": "Prioritize hands-on labs and workshops over standard breakouts. Breakouts are often recorded and can be watched later; the hands-on, small-group formats are the thing you can only get in person.",
+      "tags": ["labs", "workshops", "hands-on", "learning"],
+      "source": "Reddit r/aws attendee tips"
+    },
+    {
+      "id": "t-water",
+      "text": "Drink lots of water. The desert air plus long days dehydrate you fast, and dehydration is the hidden cause of the mid-week crash.",
+      "tags": ["health", "energy"],
+      "source": "Reddit r/aws attendee tips"
+    },
+    {
+      "id": "t-hands",
+      "text": "Wash your hands often. Tens of thousands of people, shared surfaces, and a long week - avoiding 'conference flu' keeps you going till Friday.",
+      "tags": ["health", "hygiene"],
+      "source": "Reddit r/aws attendee tips"
+    },
+    {
+      "id": "t-coffee",
+      "text": "Drink coffee. Early keynotes and back-to-back sessions are a grind; grab the free coffee to stay sharp.",
+      "tags": ["energy", "logistics"],
+      "source": "Reddit r/aws attendee tips"
+    },
+    {
+      "id": "t-swag-suitcase",
+      "text": "Pack an extra (or half-empty) suitcase for swag. You'll collect a lot of handouts and giveaways at the Expo booths and want room to bring it home.",
+      "tags": ["swag", "expo", "packing"],
+      "source": "Reddit r/aws + community.aws (paraphrased)"
+    },
+    {
+      "id": "t-contests",
+      "text": "Enter the contests and booth giveaways at the Expo. With so many vendors running raffles, you'll very likely win something.",
+      "tags": ["expo", "contests", "swag"],
+      "source": "Reddit r/aws attendee tips"
+    },
+    {
+      "id": "t-subreddit",
+      "text": "Keep the r/aws subreddit handy during the event. Attendees post hidden secrets, meetups, and last-minute tips throughout the week.",
+      "tags": ["community", "reddit", "tips"],
+      "source": "Reddit r/aws attendee tips"
+    },
+    {
+      "id": "t-app",
+      "text": "Download the official re:Invent app. Beyond the agenda, it surfaces games, activities, and pop-up things happening throughout the conference.",
+      "tags": ["app", "prep", "activities"],
+      "source": "Reddit r/aws attendee tips"
+    },
+    {
+      "id": "t-fake-contact",
+      "text": "Consider using a dedicated email and phone number when registering. Vendors follow up heavily for a week or two after the conference, so a separate contact keeps your main inbox clean.",
+      "tags": ["registration", "privacy", "vendors"],
+      "source": "Reddit r/aws attendee tips"
+    },
+    {
+      "id": "t-preregister",
+      "text": "Pre-register and grab your badge early - ideally Sunday - using the QR code from registration. It's much faster than lining up on Monday morning or at the airport.",
+      "tags": ["registration", "badge", "arrival"],
+      "source": "Reddit r/aws + dev.to AWS Heroes (paraphrased)"
+    },
+    {
+      "id": "t-friday-repeats",
+      "text": "Most major sessions run Tuesday-Thursday; Friday is largely repeats. If you stay through Friday you often have better luck getting into previously-full reserved sessions as people head home.",
+      "tags": ["planning", "friday", "repeats", "reservations"],
+      "source": "roadtoaws.com (paraphrased)"
+    },
+    {
+      "id": "t-alternate-types",
+      "text": "Alternate activity types across the day - a hands-on session, then networking, then something fun. Switching gears keeps your energy up and makes the week more memorable.",
+      "tags": ["balance", "energy", "networking"],
+      "source": "community.aws first-timer lessons (paraphrased)"
+    },
+    {
+      "id": "t-backpack",
+      "text": "Bring a small, lightweight backpack (even a drawstring bag) for daily use - easy to carry in crowds and keeps both hands free while you move between venues.",
+      "tags": ["packing", "logistics"],
+      "source": "dev.to first tech conference tips (paraphrased)"
+    },
+    {
+      "id": "t-goals-group-by-location",
+      "text": "Set clear goals first, then pick sessions that serve them and group them by location/venue to cut down on travel. A goal-driven, location-clustered agenda beats a scattered one.",
+      "tags": ["planning", "goals", "venues"],
+      "source": "dev.to AWS Builders (paraphrased)"
+    },
+    {
+      "id": "t-check-level",
+      "text": "Check the session level (100-500) before adding it. A session that's too basic or too advanced for you wastes a slot - match the level to your experience.",
+      "tags": ["sessions", "level", "planning"],
+      "source": "jimmydqv.com — Session Planning (paraphrased)"
+    }
+  ]
+}

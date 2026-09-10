@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "reinvent-2026": {
+      "command": "python",
+      "args": ["-m", "reinvent2026_mcp.server"],
+      "cwd": "d:/github work/reinvent2026-mcp",
+      "disabled": false,
+      "autoApprove": [
+        "catalog_status",
+        "search_sessions",
+        "semantic_search",
+        "get_session",
+        "list_venues",
+        "estimate_travel",
+        "official_links"
+      ]
+    }
+  }
+}
