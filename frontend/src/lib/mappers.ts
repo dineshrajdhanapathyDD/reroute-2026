@@ -61,14 +61,21 @@ export function mapSessions(list: BackendSession[]): Session[] {
   return (list || []).map(mapSession);
 }
 
-// Backend daily_schedule (one day's items) -> UI ScheduleBlocks for that day.
-export function mapScheduleBlocks(plan: BackendPlan, dayFilter?: string): ScheduleBlock[] {
-  const sessionById = new Map(plan.sessions.map((s) => [s.id, s]));
-  const days = (plan.daily_schedule || []).filter((d) => d.day !== 'Arrival Day');
-  const day = dayFilter ? days.find((d) => d.day === dayFilter) : days[0];
-  if (!day) return [];
+type DayItem = {
+  time: string;
+  activity: string;
+  venue?: string;
+  session_id?: string;
+  kind: string;
+  icon: string;
+};
+
+function mapDayItems(
+  items: DayItem[],
+  sessionById: Map<string, BackendSession>,
+): ScheduleBlock[] {
   const blocks: ScheduleBlock[] = [];
-  for (const item of day.items) {
+  for (const item of items) {
     if (item.kind === 'session' && item.session_id && sessionById.has(item.session_id)) {
       blocks.push({ type: 'session', time: item.time, session: mapSession(sessionById.get(item.session_id)!) });
     } else if (item.kind === 'travel') {
@@ -78,6 +85,30 @@ export function mapScheduleBlocks(plan: BackendPlan, dayFilter?: string): Schedu
     }
   }
   return blocks;
+}
+
+// Backend daily_schedule (one day's items) -> UI ScheduleBlocks for that day.
+export function mapScheduleBlocks(plan: BackendPlan, dayFilter?: string): ScheduleBlock[] {
+  const sessionById = new Map(plan.sessions.map((s) => [s.id, s]));
+  const days = (plan.daily_schedule || []).filter((d) => d.day !== 'Arrival Day');
+  const day = dayFilter ? days.find((d) => d.day === dayFilter) : days[0];
+  if (!day) return [];
+  return mapDayItems(day.items, sessionById);
+}
+
+export interface ScheduleDay {
+  day: string; // e.g. "Tuesday" / "MON NOV 30"
+  blocks: ScheduleBlock[];
+}
+
+// All planned days (excludes the Arrival Day) with their blocks, so the
+// Schedule page can render real, clickable day tabs.
+export function mapScheduleDays(plan: BackendPlan): ScheduleDay[] {
+  const sessionById = new Map(plan.sessions.map((s) => [s.id, s]));
+  const days = (plan.daily_schedule || []).filter((d) => d.day !== 'Arrival Day');
+  return days
+    .map((d) => ({ day: d.day, blocks: mapDayItems(d.items, sessionById) }))
+    .filter((d) => d.blocks.length > 0);
 }
 
 export function mapCategories(plan: BackendPlan): Category[] {

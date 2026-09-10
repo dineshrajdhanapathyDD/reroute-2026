@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react
 import type { Session, ScheduleBlock, Category, AgentActivityItem } from './types';
 import type { JourneyLogEntry } from './types';
 import { api, type BackendPlan } from './api';
-import { mapSessions, mapScheduleBlocks, mapCategories, mapAgentActivity, mapJourneyLog, mapReroute } from './mappers';
+import { mapSessions, mapScheduleBlocks, mapScheduleDays, mapCategories, mapAgentActivity, mapJourneyLog, mapReroute, type ScheduleDay } from './mappers';
 import { MissionContext, type MissionState, type DroppedSession } from './missionContext';
 import {
   sessions as mockSessions,
@@ -29,6 +29,7 @@ export function MissionProvider({ children }: { children: ReactNode }) {
   const [routeQuality, setRouteQuality] = useState(86);
   const [sessions, setSessions] = useState<Session[]>(mockSessions);
   const [scheduleBlocks, setScheduleBlocks] = useState<ScheduleBlock[]>(mockSchedule);
+  const [scheduleDays, setScheduleDays] = useState<ScheduleDay[]>([{ day: 'MON NOV 30', blocks: mockSchedule }]);
   const [categories, setCategories] = useState<Category[]>(mockCategories);
   const [agentActivity, setAgentActivity] = useState<AgentActivityItem[]>(mockActivity);
   const [recommendations, setRecommendations] = useState<string[]>([]);
@@ -42,6 +43,8 @@ export function MissionProvider({ children }: { children: ReactNode }) {
         setSessions(mapSessions(p.sessions));
         setSelectedIds(p.sessions.map((s) => s.id));
         setScheduleBlocks(mapScheduleBlocks(p));
+        const allDays = mapScheduleDays(p);
+        if (allDays.length) setScheduleDays(allDays);
       }
       const cats = mapCategories(p);
       if (cats.length) setCategories(cats);
@@ -94,10 +97,10 @@ export function MissionProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<MissionState>(() => ({
     mission, goal, loading, live, journeyScore, routeQuality,
-    sessions, scheduleBlocks, categories, agentActivity, journeyLog, droppedSessions,
+    sessions, scheduleBlocks, scheduleDays, categories, agentActivity, journeyLog, droppedSessions,
     recommendations, selectedIds,
     setMission, runPlan, applyPlan, reroute, acceptReroute,
-  }), [mission, goal, loading, live, journeyScore, routeQuality, sessions, scheduleBlocks,
+  }), [mission, goal, loading, live, journeyScore, routeQuality, sessions, scheduleBlocks, scheduleDays,
     categories, agentActivity, journeyLog, droppedSessions, recommendations, selectedIds,
     runPlan, applyPlan, reroute, acceptReroute]);
 

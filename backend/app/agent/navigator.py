@@ -113,15 +113,16 @@ def orchestrate_plan(mission_text: str, prefs: TripPreferences | None = None) ->
     if strands_agent.model_available():
         try:
             plan = strands_agent.run_agent_plan(mission_text)
-            _tag_orchestrator(plan.agent_activity, "strands")
-            return plan
-        except Exception as exc:  # pragma: no cover - network/creds dependent
+            # The model can return a well-formed but EMPTY structured plan (no
+            # sessions / no schedule). That would leave the whole UI blank, so
+            # treat it as a miss and fall back to the deterministic pipeline.
+            if plan and plan.sessions and plan.daily_schedule:
+                _tag_orchestrator(plan.agent_activity, "strands")
+                return plan
+            raise ValueError("model returned an empty plan")
+        except Exception:  # pragma: no cover - network/creds dependent
             # Never break the demo: fall back to the deterministic pipeline.
-            plan = _deterministic_plan(mission_text, prefs)
-            plan.recommendations.insert(
-                0, f"(Strands model call failed, used deterministic pipeline: {type(exc).__name__})"
-            )
-            return plan
+            return _deterministic_plan(mission_text, prefs)
     return _deterministic_plan(mission_text, prefs)
 
 
@@ -135,8 +136,10 @@ def orchestrate_reroute(
             result = strands_agent.run_agent_reroute(
                 dropped_session_id, current_selected_ids, reason
             )
-            _tag_orchestrator(result.agent_activity, "strands")
-            return result
+            if result and result.alternatives:
+                _tag_orchestrator(result.agent_activity, "strands")
+                return result
+            raise ValueError("model returned no alternatives")
         except Exception:  # pragma: no cover
             return _deterministic_reroute(dropped_session_id, current_selected_ids, reason)
     return _deterministic_reroute(dropped_session_id, current_selected_ids, reason)

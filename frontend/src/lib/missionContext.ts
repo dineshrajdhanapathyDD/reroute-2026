@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { Session, ScheduleBlock, Category, AgentActivityItem, JourneyLogEntry, RerouteOption } from './types';
+import type { ScheduleDay } from './mappers';
 import type { BackendPlan } from './api';
 
 export interface DroppedSession { id: string; title: string; reason: string }
@@ -13,6 +14,7 @@ export interface MissionState {
   routeQuality: number;
   sessions: Session[];
   scheduleBlocks: ScheduleBlock[];
+  scheduleDays: ScheduleDay[];
   categories: Category[];
   agentActivity: AgentActivityItem[];
   journeyLog: JourneyLogEntry[];
