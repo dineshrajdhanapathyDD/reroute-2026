@@ -82,6 +82,16 @@ class ChatRequest(BaseModel):
     history: list[dict] = []
 
 
+class WatchRequest(BaseModel):
+    selected_ids: list[str] = []
+    learning_goal: str = ""
+
+
+class ResolveDecisionRequest(BaseModel):
+    action: str = "approve"  # "approve" | "dismiss"
+    chosen_option_id: str | None = None
+
+
 # --------------------------------------------------------------------------- #
 # Endpoints
 # --------------------------------------------------------------------------- #
@@ -460,3 +470,52 @@ def chat(req: ChatRequest) -> dict:
     from app.engine import chat as chat_engine
 
     return chat_engine.chat(req.message, req.history)
+
+
+# --------------------------------------------------------------------------- #
+# Autonomous background monitor — the "runs quietly, pings only on a real
+# decision" agent. Watch a plan, scan on a schedule (cron/EventBridge in prod,
+# /scan here), and surface pre-analyzed decisions for human approval.
+# --------------------------------------------------------------------------- #
+@app.post("/api/monitor/watch")
+def monitor_watch(req: WatchRequest) -> dict:
+    """Start watching a plan's selected sessions for problems that need a human
+    decision (a session filling up, a cancellation, a tight transition)."""
+    from app.engine import monitor
+
+    return monitor.watch(req.selected_ids, req.learning_goal)
+
+
+@app.post("/api/monitor/scan")
+def monitor_scan() -> dict:
+    """Run one autonomous monitoring pass. Returns any newly-raised decisions;
+    empty when the route is healthy (the normal, quiet case). In production this
+    is triggered on a schedule, not by the client."""
+    from app.engine import monitor
+
+    return monitor.scan()
+
+
+@app.get("/api/monitor/status")
+def monitor_status() -> dict:
+    """Current watch state: pending decisions (what needs you), resolved history,
+    and whether the route is healthy."""
+    from app.engine import monitor
+
+    return monitor.status()
+
+
+@app.post("/api/monitor/decision/{decision_id}/resolve")
+def monitor_resolve(decision_id: str, req: ResolveDecisionRequest) -> dict:
+    """Approve a decision (swap in the chosen/recommended alternative) or dismiss
+    it. This is the only moment the human is asked to act."""
+    from app.engine import monitor
+
+    return monitor.resolve(decision_id, req.action, req.chosen_option_id)
+
+
+@app.post("/api/monitor/stop")
+def monitor_stop() -> dict:
+    from app.engine import monitor
+
+    return monitor.stop()

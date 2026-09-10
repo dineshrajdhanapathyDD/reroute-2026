@@ -17,6 +17,10 @@ the app always works, even without AWS credentials.
 
 **Live demo:** https://d315hfgmfqehyn.cloudfront.net
 
+**Architecture diagram:** [`docs/architecture.drawio`](docs/architecture.drawio) (open with the draw.io / diagrams.net app or the VS Code Draw.io extension)
+
+**License:** MIT — see [`LICENSE`](LICENSE)
+
 ---
 
 ## How it works
@@ -30,6 +34,24 @@ what they ask, the agent:
 - **Builds a route** — a full day-by-day plan, or three ranked options:
   **Plan A (ideal) / B (backup) / C (low-risk)**
 - **Re-routes** when a session becomes full or cancelled, protecting the goal
+
+## Agent Watch — runs in the background, pings you only on a decision
+
+Once your route is built, Re:Route stops being an app you babysit. The
+**autonomous monitor** (`app/engine/monitor.py`) watches your selected sessions
+and, on each scan tick (a cron / Amazon EventBridge schedule in production, or
+`POST /api/monitor/scan` in the demo), re-checks the route against changing
+conditions — a session that just filled up or was cancelled, or a venue
+transition that turned infeasible.
+
+It stays quiet while the route is healthy. When something **changes** and needs a
+human call, it opens a *decision* that already carries the pre-analyzed fix
+(recommended replacement sessions via the recovery engine) and asks you to
+approve or dismiss. That's the only moment you're pulled in — the "Agent Watch"
+page shows the calm/green state and lights up only when a decision is pending.
+
+Endpoints: `POST /api/monitor/watch` · `POST /api/monitor/scan` ·
+`GET /api/monitor/status` · `POST /api/monitor/decision/{id}/resolve`.
 
 Under the hood, specialized agent roles are surfaced in the UI:
 
@@ -181,5 +203,11 @@ private S3 bucket, CloudFront with origin access control, and SPA routing.
 | `POST /api/advice` | RAG preparation tips |
 | `GET /api/catalog/filter` | Filter the full catalog by topic/level/format/venue/day |
 | `GET /api/health` · `GET /api/aws/status` | Runtime + live-service status |
+
+---
+
+## License
+
+Released under the [MIT License](LICENSE).
 
 Built for AWS re:Invent 2026.

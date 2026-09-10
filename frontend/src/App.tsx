@@ -3,6 +3,7 @@ import { ToastProvider } from './components/ui/Toast';
 import { MissionProvider } from './lib/mission';
 import AppShell from './components/layout/AppShell';
 import Chat from './pages/Chat';
+import Monitor from './pages/Monitor';
 import Onboarding from './pages/Onboarding';
 import Mission from './pages/Mission';
 import Schedule from './pages/Schedule';
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/onboarding" element={<Onboarding />} />
 
           <Route element={<AppShell />}>
+            <Route path="/monitor" element={<Monitor />} />
             <Route path="/mission" element={<Mission />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/sessions" element={<Sessions />} />

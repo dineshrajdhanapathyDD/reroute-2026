@@ -1,9 +1,10 @@
 import { NavLink, Link } from 'react-router-dom';
-import { Compass, Calendar, Search, Filter, Layers, Lightbulb, BookOpen, RefreshCw, Map, ClipboardList, Settings, Activity, MessageCircle } from 'lucide-react';
+import { Compass, Calendar, Search, Filter, Layers, Lightbulb, BookOpen, RefreshCw, Map, ClipboardList, Settings, Activity, MessageCircle, ShieldCheck } from 'lucide-react';
 import clsx from 'clsx';
 
 const navItems = [
   { to: '/chat', label: 'Chat', icon: MessageCircle },
+  { to: '/monitor', label: 'Agent Watch', icon: ShieldCheck },
   { to: '/mission', label: 'Mission', icon: Compass },
   { to: '/plans', label: 'Plan A / B / C', icon: Layers },
   { to: '/schedule', label: 'Schedule', icon: Calendar },

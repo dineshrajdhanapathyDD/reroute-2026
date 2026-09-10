@@ -108,6 +108,48 @@ export interface ChatReply {
   };
 }
 
+export interface MonitorOption {
+  id: string;
+  title: string;
+  note: string;
+  match_score: number;
+  venue?: string;
+  day?: string;
+}
+
+export interface MonitorDecision {
+  id: string;
+  kind: string;
+  severity: 'high' | 'medium';
+  session_id: string;
+  title: string;
+  summary: string;
+  options: MonitorOption[];
+  recommended_option_id?: string;
+  status: string;
+  resolution?: string;
+}
+
+export interface MonitorStatus {
+  watching: boolean;
+  learning_goal: string;
+  watched_sessions: number;
+  selected_ids: string[];
+  scan_count: number;
+  last_scan_at: number;
+  pending_decisions: MonitorDecision[];
+  resolved_decisions: MonitorDecision[];
+  healthy: boolean;
+}
+
+export interface MonitorScan {
+  watching: boolean;
+  scan_count?: number;
+  checked: number;
+  new_decisions: MonitorDecision[];
+  pending?: number;
+}
+
 // ---- API ---- //
 export const api = {
   health: () => get<Record<string, unknown>>('/health'),
@@ -146,6 +188,16 @@ export const api = {
 
   chat: (message: string, history: ChatTurn[] = []) =>
     post<ChatReply>('/chat', { message, history }),
+
+  // Autonomous background monitor.
+  monitorWatch: (selectedIds: string[], learningGoal: string) =>
+    post<MonitorStatus>('/monitor/watch', { selected_ids: selectedIds, learning_goal: learningGoal }),
+  monitorScan: () => post<MonitorScan>('/monitor/scan', {}),
+  monitorStatus: () => get<MonitorStatus>('/monitor/status'),
+  monitorResolve: (decisionId: string, action: 'approve' | 'dismiss', chosenOptionId?: string) =>
+    post<{ decision: MonitorDecision; selected_ids: string[] }>(
+      `/monitor/decision/${decisionId}/resolve`, { action, chosen_option_id: chosenOptionId },
+    ),
 
   event: () => get<Record<string, unknown>>('/event'),
   officialLinks: () => get<Record<string, string>>('/official-links'),
