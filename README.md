@@ -1,25 +1,39 @@
 # Re:Route AI
 
 > **Never lose your learning path at AWS re:Invent.**
->
 > The destination stays the same. The route can change.
 
-Re:Route AI is an autonomous learning-navigator agent for AWS re:Invent 2026.
-You tell it a learning goal in plain language — *"I want to get production-ready
-with AI agents"* — and it turns that into a realistic, walkable route across the
-conference: sessions that match your goal, a conflict-free daily schedule, and
-automatic **re-routing** when a session fills up.
+**Agents for Humans hackathon · Track: Professional Agents · Built with the Strands Agents SDK on Amazon Bedrock (Nova).**
 
-The agent is orchestrated with **AWS Strands Agents** and runs on **Amazon Nova**
-(Bedrock), with **Amazon Titan** embeddings for semantic search and **Amazon
-Polly** for voice. Everything degrades gracefully to a deterministic pipeline so
-the app always works, even without AWS credentials.
+Re:Route AI takes a repetitive, time-draining task off an attendee's plate:
+building — and constantly re-building — a workable schedule across AWS re:Invent's
+1,500+ sessions and six Las Vegas venues. You tell it a learning goal in plain
+language (*"I want to get production-ready with AI agents"*) and it builds a
+realistic, walkable route. Then it **runs in the background** and only pings you
+when a real decision is needed — a session fills up, a route breaks — arriving
+with the fix already worked out.
 
-**Live demo:** https://d315hfgmfqehyn.cloudfront.net
+### Try it in 60 seconds
 
-**Architecture diagram:** [`docs/architecture.drawio`](docs/architecture.drawio) (open with the draw.io / diagrams.net app or the VS Code Draw.io extension)
+1. **Live demo → https://d315hfgmfqehyn.cloudfront.net** — on the chat page, type
+   *"I'm new — build me a plan for learning GenAI"*, then open **Agent Watch**.
+2. **Run locally →** see [Run locally](#run-locally) (works with zero AWS
+   credentials — a deterministic pipeline stands in for the model).
+3. **See the design →** [architecture diagram](docs/architecture.drawio) ·
+   [how it works](#how-it-works) · [Agent Watch](#agent-watch--runs-in-the-background-pings-you-only-on-a-decision).
 
-**License:** MIT — see [`LICENSE`](LICENSE)
+| | |
+|---|---|
+| **Live demo** | https://d315hfgmfqehyn.cloudfront.net |
+| **Agent framework** | AWS Strands Agents SDK (real `Agent` + tool-calling loop + `structured_output`) |
+| **AWS services** | Amazon Bedrock **Nova** (reasoning), **Titan** embeddings (semantic search + RAG), **Polly** (voice); deployed on **Lambda + API Gateway + Function URL**, **S3 + CloudFront** |
+| **Stack** | Python · FastAPI · Pydantic · pytest · React 19 · TypeScript · Vite · Tailwind |
+| **License** | [MIT](LICENSE) |
+| **Architecture** | [`docs/architecture.drawio`](docs/architecture.drawio) |
+
+> Everything degrades gracefully: with no AWS credentials the same agent tools
+> run in a deterministic pipeline, so the app always works. `GET /api/health`
+> reports which path is live, honestly.
 
 ---
 
