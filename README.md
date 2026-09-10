@@ -37,6 +37,11 @@ with the fix already worked out.
 
 ---
 
+## Architecture diagram
+
+<img width="1366" height="856" alt="rerouteai drawio" src="https://github.com/user-attachments/assets/3bb9bbf5-8a10-4896-8936-0fe150b44931" />
+
+
 ## How it works
 
 A newcomer lands on a **chat page** and just talks to the Navigator. Based on
