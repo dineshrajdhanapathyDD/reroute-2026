@@ -5,10 +5,22 @@ import ProgressRing from '../components/ui/ProgressRing';
 import ProgressBar from '../components/ui/ProgressBar';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
+import SpeakButton from '../components/ui/SpeakButton';
 import { useMission } from '../lib/mission';
 
 export default function Mission() {
   const { goal: missionGoal, categories, scheduleBlocks: todayScheduleBlocks, journeyScore } = useMission();
+
+  const topSessions = todayScheduleBlocks
+    .filter((b) => b.type === 'session')
+    .slice(0, 3)
+    .map((b) => b.session!.title);
+  const planSummary =
+    `Here's your Re:Route plan. Your goal: ${missionGoal}. ` +
+    `Your journey score is ${journeyScore} percent. ` +
+    (topSessions.length ? `Your next sessions are: ${topSessions.join('; ')}. ` : '') +
+    `Remember, the destination stays the same. The route can change.`;
+
   return (
     <div className="flex flex-col gap-6 animate-rise-in">
       {/* Header */}
@@ -18,8 +30,9 @@ export default function Mission() {
           Your destination
         </h1>
         <p className="mt-1.5 max-w-xl text-text-secondary">{missionGoal}</p>
-        <div className="mt-3">
+        <div className="mt-3 flex items-center gap-2">
           <Badge status="go">Journey status: On route</Badge>
+          <SpeakButton text={planSummary} label="Read plan" />
         </div>
       </div>
 

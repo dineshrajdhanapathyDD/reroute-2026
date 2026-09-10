@@ -8,6 +8,7 @@ import { Compass, Send, Sparkles, ArrowRight, Loader2 } from 'lucide-react';
 import { api, type ChatReply, type ChatTurn, type BackendPlan, type ABCPlanEntry } from '../lib/api';
 import { useMission } from '../lib/missionContext';
 import Button from '../components/ui/Button';
+import SpeakButton from '../components/ui/SpeakButton';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -141,9 +142,12 @@ export default function Chat() {
             <div key={i} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
               <div className={m.role === 'user' ? 'max-w-[85%]' : 'w-full'}>
                 {m.role === 'assistant' && (
-                  <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-medium text-signal-400">
-                    <Sparkles size={12} />
-                    Navigator
+                  <div className="mb-1.5 flex items-center gap-2">
+                    <span className="flex items-center gap-1.5 text-[11px] font-medium text-signal-400">
+                      <Sparkles size={12} />
+                      Navigator
+                    </span>
+                    <SpeakButton text={m.content} />
                   </div>
                 )}
                 <div
