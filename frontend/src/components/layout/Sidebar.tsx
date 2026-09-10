@@ -1,8 +1,9 @@
-import { NavLink } from 'react-router-dom';
-import { Compass, Calendar, Search, Filter, Layers, Lightbulb, BookOpen, RefreshCw, Map, ClipboardList, Settings, Activity } from 'lucide-react';
+import { NavLink, Link } from 'react-router-dom';
+import { Compass, Calendar, Search, Filter, Layers, Lightbulb, BookOpen, RefreshCw, Map, ClipboardList, Settings, Activity, MessageCircle } from 'lucide-react';
 import clsx from 'clsx';
 
 const navItems = [
+  { to: '/chat', label: 'Chat', icon: MessageCircle },
   { to: '/mission', label: 'Mission', icon: Compass },
   { to: '/plans', label: 'Plan A / B / C', icon: Layers },
   { to: '/schedule', label: 'Schedule', icon: Calendar },
@@ -20,12 +21,12 @@ const navItems = [
 export default function Sidebar() {
   return (
     <aside className="hidden w-[240px] shrink-0 flex-col border-r border-line bg-hull/60 lg:flex">
-      <div className="flex h-[68px] items-center gap-2 border-b border-line px-5">
+      <Link to="/chat" className="flex h-[68px] items-center gap-2 border-b border-line px-5 transition-colors hover:bg-surface-raised" aria-label="Go to chat">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-signal-500">
           <Compass size={17} className="text-void" strokeWidth={2.5} />
         </div>
         <span className="font-display text-[15px] font-bold tracking-tight">RE:ROUTE AI</span>
-      </div>
+      </Link>
       <nav className="flex-1 space-y-1 px-3 py-4">
         {navItems.map((item) => (
           <NavLink

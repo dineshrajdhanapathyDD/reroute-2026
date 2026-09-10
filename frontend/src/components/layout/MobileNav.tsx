@@ -1,13 +1,13 @@
 import { NavLink } from 'react-router-dom';
-import { Compass, Calendar, Map, RefreshCw, ClipboardList } from 'lucide-react';
+import { Compass, Calendar, Map, RefreshCw, MessageCircle } from 'lucide-react';
 import clsx from 'clsx';
 
 const items = [
+  { to: '/chat', label: 'Chat', icon: MessageCircle },
   { to: '/mission', label: 'Mission', icon: Compass },
   { to: '/schedule', label: 'Schedule', icon: Calendar },
   { to: '/wayfinder', label: 'Maps', icon: Map },
   { to: '/reroute', label: 'ReRoute', icon: RefreshCw },
-  { to: '/journey', label: 'Journey', icon: ClipboardList },
 ];
 
 export default function MobileNav() {
